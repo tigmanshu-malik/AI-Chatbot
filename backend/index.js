@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+const cors = require('cors')
 
 const Groq = require('groq-sdk')
 
@@ -7,6 +8,8 @@ const groq = new Groq({ apiKey: process.env.API_KEY })
 
 const app = express();
 const port = 3000;
+
+app.use(cors())
 
 app.use(express.json());
 
@@ -26,13 +29,13 @@ app.post('/chat', async (req, res) => {
           })
         
 
-        res.json({
+        return res.json({
             response: completion.choices[0].message.content,
         });
 
     } catch (error) {
-        console.error('Error with Claude API:', error.message);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error with API:', error.message);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
